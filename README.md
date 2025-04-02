@@ -14,7 +14,9 @@ This repository contains a collection of example projects for the Opal Kelly XEM
 │   ├── 04_block_pipe_example/
 │   ├── 05_trigger_example/
 │   ├── 06_fifo_example/
-│   └── 07_dram_example/
+│   ├── 07_dram_example/
+│   ├── 08_pipe_speedtest/
+│   └── 09_btpipe_speedtest/
 ├── verilog/           # Verilog source code
 │   ├── 01_led_example/
 │   ├── 02_wire_example/
@@ -22,7 +24,9 @@ This repository contains a collection of example projects for the Opal Kelly XEM
 │   ├── 04_block_pipe_example/
 │   ├── 05_trigger_example/
 │   ├── 06_fifo_example/
-│   └── 07_dram_example/
+│   ├── 07_dram_example/
+│   ├── 08_pipe_speedtest/
+│   └── 09_btpipe_speedtest/
 └── xdc/               # Xilinx Design Constraint files
     └── xem7310.xdc    # XDC file for the XEM7310 board
 ```
@@ -36,6 +40,8 @@ This repository contains a collection of example projects for the Opal Kelly XEM
 5. **Trigger Example**: Illustrates how to use triggers for synchronization.
 6. **FIFO Example**: Demonstrates FIFO (First-In-First-Out) buffer operations.
 7. **DRAM Example**: Shows how to access and utilize the onboard DDR3 memory.
+8. **Pipe Speedtest**: Transaction speedtest for pipe operations.
+9. **BTPipe Speedtest**: Transaction speedtest for block-throttled pipe opeations.
 
 ## Requirements
 
