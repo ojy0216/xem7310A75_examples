@@ -82,10 +82,10 @@ def main(num_addr, sequential=True):
                 inst = pack_dram_inst(
                     is_dram=True, is_read=False, dram_addr=addr, dram_wr_data=data
                 )
-                fpga.WriteToBlockPipeIn(ep_addr=0x80, data=inst)
+                write_bytes = fpga.WriteToBlockPipeIn(ep_addr=0x80, data=inst)
 
                 # Update progress and calculate transfer rate
-                total_bytes += 32  # 256 bits = 32 bytes per transfer
+                total_bytes += write_bytes
                 progress.update(task, completed=total_bytes)
 
         write_duration = time.perf_counter_ns() - start_time
@@ -132,7 +132,7 @@ def main(num_addr, sequential=True):
                     print(f"Read: {read_data} | Answer: {data_dict[addr]}\n")
 
                 # Update progress and calculate transfer rate
-                total_bytes += 16  # 128 bits = 16 bytes per transfer
+                total_bytes += read_data.transfer_byte
                 progress.update(task, completed=total_bytes)
 
         read_duration = time.perf_counter_ns() - start_time
