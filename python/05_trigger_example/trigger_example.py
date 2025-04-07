@@ -1,6 +1,7 @@
 import numpy as np
 from mms_ok import XEM7310
 
+
 def main():
     bitstream_path = r"../../bitstream/trigger_example.bit"
 
@@ -18,9 +19,10 @@ def main():
         print("Triggered!")
 
         fpga.CheckTriggered(0x60, 0x1, timeout=1)
-        
+
         read_data = fpga.ReadFromPipeOut(0xA0, 16).to_ndarray(np.uint16)
         print(f"Read data: {read_data[-2]} | Answer: {ans}")
+
 
 if __name__ == "__main__":
     main()

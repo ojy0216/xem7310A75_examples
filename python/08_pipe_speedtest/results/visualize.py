@@ -33,33 +33,38 @@ tick_positions = [i * 2.5 + 0.5 for i in range(len(rate_list))]
 for i, rate in enumerate(rate_list):
     bulk_read_rate = np.load(f"./bulk_read_rates_{rate}.npy")
     bulk_write_rate = np.load(f"./bulk_write_rates_{rate}.npy")
-    
+
     # Divide all values by 10^6 to convert to MiB/s
     bulk_read_rate = bulk_read_rate / 10**6
     bulk_write_rate = bulk_write_rate / 10**6
 
     # Plot read box plot
-    bp = plt.boxplot(bulk_read_rate, positions=[x_positions[i*2]], widths=0.4, whis=[0, 100])
-    for median in bp['medians']:
-        median.set_color('blue')
-    
+    bp = plt.boxplot(
+        bulk_read_rate, positions=[x_positions[i * 2]], widths=0.4, whis=[0, 100]
+    )
+    for median in bp["medians"]:
+        median.set_color("blue")
+
     # Plot write box plot
-    bp = plt.boxplot(bulk_write_rate, positions=[x_positions[i*2+1]], widths=0.4, whis=[0, 100])
-    for median in bp['medians']:
-        median.set_color('red')
+    bp = plt.boxplot(
+        bulk_write_rate, positions=[x_positions[i * 2 + 1]], widths=0.4, whis=[0, 100]
+    )
+    for median in bp["medians"]:
+        median.set_color("red")
 
 # Set the tick positions and labels
-plt.xticks(tick_positions, rate_list, rotation=45, ha='center')
+plt.xticks(tick_positions, rate_list, rotation=45, ha="center")
 
 # Add a legend to distinguish between read and write
 from matplotlib.lines import Line2D
+
 legend_elements = [
-    Line2D([0], [0], color='blue', lw=2, label='Read'),
-    Line2D([0], [0], color='red', lw=2, label='Write')
+    Line2D([0], [0], color="blue", lw=2, label="Read"),
+    Line2D([0], [0], color="red", lw=2, label="Write"),
 ]
 plt.legend(handles=legend_elements)
 
 plt.title("Pipe Speed Test")
-plt.grid(alpha=0.5, axis='y')
+plt.grid(alpha=0.5, axis="y")
 plt.ylabel("Transfer Speed (MiB/s)")
 plt.show()

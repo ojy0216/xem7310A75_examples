@@ -1,6 +1,8 @@
-import numpy as np
 import time
+
+import numpy as np
 from mms_ok import XEM7310
+
 
 def main():
     bitstream_path = r"../../bitstream/led_example.bit"
@@ -10,6 +12,7 @@ def main():
             print(f"Setting LED : {np.binary_repr(i, width=8)}")
             fpga.SetLED(i)
             time.sleep(0.5)
+
 
 if __name__ == "__main__":
     main()

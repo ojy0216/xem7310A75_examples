@@ -1,12 +1,20 @@
-from time import sleep, perf_counter_ns
 from secrets import token_hex
+from time import perf_counter_ns, sleep
+
 from mms_ok import XEM7310
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 from rich.panel import Panel
+from rich.progress import (
+    BarColumn,
+    Progress,
+    SpinnerColumn,
+    TaskProgressColumn,
+    TextColumn,
+)
 from rich.table import Table
 
 console = Console()
+
 
 def format_bytes(bytes):
     if bytes < 1024:
@@ -18,8 +26,9 @@ def format_bytes(bytes):
     else:
         return f"{bytes / 1024 / 1024 / 1024:.2f} GiB"
 
+
 def write_test(fpga, num_transfer, progress=None, task_id=None):
-    data = [token_hex(nbytes=(128//8)) for _ in range(num_transfer)]
+    data = [token_hex(nbytes=(128 // 8)) for _ in range(num_transfer)]
     total_bytes = 0
 
     start = perf_counter_ns()
@@ -29,7 +38,7 @@ def write_test(fpga, num_transfer, progress=None, task_id=None):
         BarColumn(),
         TaskProgressColumn(),
         TextColumn("{task.fields[speed]}"),
-        console=console
+        console=console,
     ) as progress:
         task = progress.add_task("Writing...", total=num_transfer, speed="")
         for i in range(num_transfer):
@@ -52,6 +61,7 @@ def write_test(fpga, num_transfer, progress=None, task_id=None):
 
     return transfer_rate
 
+
 def bulk_write_test(fpga, num_bytes):
     data = token_hex(nbytes=num_bytes)
     start = perf_counter_ns()
@@ -70,6 +80,7 @@ def bulk_write_test(fpga, num_bytes):
 
     return transfer_rate
 
+
 def read_test(fpga, num_transfer, progress=None, task_id=None):
     total_bytes = 0
     start = perf_counter_ns()
@@ -80,11 +91,11 @@ def read_test(fpga, num_transfer, progress=None, task_id=None):
         BarColumn(),
         TaskProgressColumn(),
         TextColumn("{task.fields[speed]}"),
-        console=console
+        console=console,
     ) as progress:
         task = progress.add_task("Reading...", total=num_transfer, speed="")
         for _ in range(num_transfer):
-            read_data = fpga.ReadFromBlockPipeOut(0xA0, 128//8, reorder_str=True)
+            read_data = fpga.ReadFromBlockPipeOut(0xA0, 128 // 8, reorder_str=True)
             total_bytes += read_data.transfer_byte
             progress.advance(task)
             # Update transfer rate in progress description
@@ -103,6 +114,7 @@ def read_test(fpga, num_transfer, progress=None, task_id=None):
 
     return transfer_rate
 
+
 def bulk_read_test(fpga, num_bytes):
     start = perf_counter_ns()
     with console.status("[bold green]Performing bulk read...") as status:
@@ -118,6 +130,7 @@ def bulk_read_test(fpga, num_bytes):
     print()
 
     return transfer_rate
+
 
 def main():
     bitstream_path = r"../../bitstream/btpipe_speedtest.bit"
@@ -170,35 +183,36 @@ def main():
             "Write Test",
             format_bytes(min(write_rates)),
             format_bytes(max(write_rates)),
-            format_bytes(sum(write_rates) / len(write_rates))
+            format_bytes(sum(write_rates) / len(write_rates)),
         )
         table.add_row(
             "Bulk Write Test",
             format_bytes(min(bulk_write_rates)),
             format_bytes(max(bulk_write_rates)),
-            format_bytes(sum(bulk_write_rates) / len(bulk_write_rates))
+            format_bytes(sum(bulk_write_rates) / len(bulk_write_rates)),
         )
         table.add_row(
             "Read Test",
             format_bytes(min(read_rates)),
             format_bytes(max(read_rates)),
-            format_bytes(sum(read_rates) / len(read_rates))
+            format_bytes(sum(read_rates) / len(read_rates)),
         )
         table.add_row(
             "Bulk Read Test",
             format_bytes(min(bulk_read_rates)),
             format_bytes(max(bulk_read_rates)),
-            format_bytes(sum(bulk_read_rates) / len(bulk_read_rates))
+            format_bytes(sum(bulk_read_rates) / len(bulk_read_rates)),
         )
 
         console.print("\n")
         console.print(table)
-    
+
     """ Just for plotting """
     # import numpy as np
 
     # np.save(f"btpipe_bulk_write_rates_{format_bytes(num_bytes)}.npy", np.array(bulk_write_rates))
     # np.save(f"btpipe_bulk_read_rates_{format_bytes(num_bytes)}.npy", np.array(bulk_read_rates))
+
 
 if __name__ == "__main__":
     main()
